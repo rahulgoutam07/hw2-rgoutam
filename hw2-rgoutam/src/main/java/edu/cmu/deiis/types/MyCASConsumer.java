@@ -63,8 +63,10 @@ public class MyCASConsumer extends CasConsumer_ImplBase {
       while(iter.hasNext()) {
         NEAnnotation ne = (NEAnnotation)iter.next();
         String str = sentId + "|" + ne.getBegin() + " " + ne.getEnd() + "|" + ne.getNamedEntity() + " " + "\n";
-        if(!output.contains(str))
+        if(!output.contains(str)) {
           bout.write(str);
+          output.add(str);
+        }
       }
       bout.flush();
     } catch(Exception e) {

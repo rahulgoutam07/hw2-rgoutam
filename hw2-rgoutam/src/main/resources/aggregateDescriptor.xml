@@ -3,10 +3,13 @@
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>false</primitive>  
   <delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="statisticalNERAbner">
+      <import name="statisticalNERAbner"/>
+    </delegateAnalysisEngine>
     <delegateAnalysisEngine key="statisticalNER">
       <import name="statisticalNER"/>
     </delegateAnalysisEngine>
-    </delegateAnalysisEngineSpecifiers>
+  </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>aggregateDescriptor</name>
     <description/>
@@ -16,8 +19,9 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
+        <node>statisticalNERAbner</node>
         <node>statisticalNER</node>
-        </fixedFlow>
+      </fixedFlow>
     </flowConstraints>
     <fsIndexCollection/>
     <capabilities>

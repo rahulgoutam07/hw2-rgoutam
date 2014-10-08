@@ -17,7 +17,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import abner.Tagger;
 
 
-
 public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
   Tagger model;
   
@@ -44,7 +43,7 @@ public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
     String[][] entities = model.getEntities(sentText);
     
     for(String ner : entities[0]) {
-      Pattern p = Pattern.compile(ner);
+      Pattern p = Pattern.compile(Pattern.quote(ner));
       Matcher m = p.matcher(sentText);
       
       while(m.find()) {
