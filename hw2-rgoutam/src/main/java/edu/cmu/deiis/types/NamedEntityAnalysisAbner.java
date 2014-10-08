@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.uima.UIMARuntimeException;
 import org.apache.uima.UimaContext;
@@ -12,25 +14,18 @@ import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import com.aliasi.chunk.Chunk;
-import com.aliasi.chunk.Chunker;
-import com.aliasi.chunk.Chunking;
-import com.aliasi.chunk.ConfidenceChunker;
-import com.aliasi.util.AbstractExternalizable;
+import abner.Tagger;
 
 
-public class NamedEntityAnalysisStatisticalGenia extends JCasAnnotator_ImplBase {
-  ConfidenceChunker model;
+
+public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
+  Tagger model;
   
-  /**
-   * read the NER model file
-   */
   @Override
   public void initialize(UimaContext aContext) throws ResourceInitializationException {
     // TODO Auto-generated method stub
     try {
-      File f = new File(this.getClass().getClassLoader().getResource((String)aContext.getConfigParameterValue("ModelName")).getFile());
-      model = (ConfidenceChunker) AbstractExternalizable.readObject(f);
+      model = new Tagger();
     } catch(Exception e) {
       throw new UIMARuntimeException(e);
     }
@@ -43,20 +38,26 @@ public class NamedEntityAnalysisStatisticalGenia extends JCasAnnotator_ImplBase 
   @Override
   public void process(JCas arg0) throws AnalysisEngineProcessException {
     // TODO Auto-generated method stub
-    int MAX_N_BEST = 10;
     FSIterator iter = arg0.getJFSIndexRepository().getAllIndexedFS(SentenceAnnotation.type);
     SentenceAnnotation sent = (SentenceAnnotation) iter.next();
-    Iterator<Chunk> it = model.nBestChunks(sent.getSentence().toCharArray(), 0, sent.getSentence().length(), MAX_N_BEST);
+    String sentText = sent.getSentence();
+    String[][] entities = model.getEntities(sentText);
     
-    while(it.hasNext()) {
-      Chunk c = it.next();
-      NEAnnotation ne = new NEAnnotation(arg0);
-      ne.setBegin(countChar((String)sent.getSentence(), c.start()));
-      ne.setEnd(countChar((String)sent.getSentence(), c.end()) - 1);
-      ne.setNamedEntity((String)sent.getSentence().substring(c.start(), c.end()));
-      ne.setConfidence(Math.pow(2.0, c.score()));
-      if(ne.getConfidence() >= 0.5)
-        ne.addToIndexes();
+    for(String ner : entities[0]) {
+      Pattern p = Pattern.compile(ner);
+      Matcher m = p.matcher(sentText);
+      
+      while(m.find()) {
+        int beginIndex = m.start();
+        int endIndex = beginIndex + ner.length();
+        NEAnnotation ne = new NEAnnotation(arg0);
+        ne.setBegin(countChar((String)sent.getSentence(), beginIndex));
+        ne.setEnd(countChar((String)sent.getSentence(), endIndex) - 1);
+        ne.setNamedEntity((String)sent.getSentence().substring(beginIndex, endIndex));
+        ne.setConfidence(0.5);
+        if(ne.getConfidence() >= 0.5)
+          ne.addToIndexes();
+      }
     }
   }
   

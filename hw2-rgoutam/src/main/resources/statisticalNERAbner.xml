@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
-  <primitive>true</primitive>  <annotatorImplementationName>edu.cmu.deiis.types.NamedEntityAnalysisStatisticalGenia</annotatorImplementationName>
+  <primitive>true</primitive>  <annotatorImplementationName>NamedEntityAnalysisAbner</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>statisticalNERGenia</name>
+    <name>statisticalNERAbner</name>
     <description/>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters>
-      <configurationParameter>
-        <name>ModelName</name>
-        <type>String</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-      </configurationParameter>
-    </configurationParameters>
-    <configurationParameterSettings>
-      <nameValuePair>
-        <name>ModelName</name>
-        <value>
-          <string>data/ne-en-bio-genia.TokenShapeChunker</string>
-        </value>
-      </nameValuePair>
-    </configurationParameterSettings>
+    <configurationParameters/>
+    <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
         <import name="descriptors.deiis_types"/>

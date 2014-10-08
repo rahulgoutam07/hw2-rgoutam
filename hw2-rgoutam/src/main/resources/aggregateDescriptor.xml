@@ -3,8 +3,8 @@
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>false</primitive>  
   <delegateAnalysisEngineSpecifiers>
-    <delegateAnalysisEngine key="statisticalNERGenia">
-      <import name="statisticalNERGenia"/>
+    <delegateAnalysisEngine key="statisticalNER">
+      <import name="statisticalNER"/>
     </delegateAnalysisEngine>
     </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
@@ -16,7 +16,7 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
-        <node>statisticalNERGenia</node>
+        <node>statisticalNER</node>
         </fixedFlow>
     </flowConstraints>
     <fsIndexCollection/>
