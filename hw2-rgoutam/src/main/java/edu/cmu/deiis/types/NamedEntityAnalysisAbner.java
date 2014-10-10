@@ -16,10 +16,14 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import abner.Tagger;
 
-
+/**
+ * Analysis engine that uses ABNER NER library
+ * @author rgoutam
+ *
+ */
 public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
   Tagger model;
-  
+  String AnalysisID = "Abner";
   @Override
   public void initialize(UimaContext aContext) throws ResourceInitializationException {
     // TODO Auto-generated method stub
@@ -41,8 +45,16 @@ public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
     SentenceAnnotation sent = (SentenceAnnotation) iter.next();
     String sentText = sent.getSentence();
     String[][] entities = model.getEntities(sentText);
+    //System.out.println(sentText);
     
     for(String ner : entities[0]) {
+      //System.out.println("ner before : " + ner);
+      ner = ner.replaceAll(" \\( ", "\\(");
+      ner = ner.replaceAll(" \\) ", "\\)");
+      ner = ner.replaceAll(" \\. ", "\\.");
+      ner = ner.replaceAll(" : ", ":");
+      ner = ner.replaceAll(" , ", ",");
+      //System.out.println("ner : " + ner);
       Pattern p = Pattern.compile(Pattern.quote(ner));
       Matcher m = p.matcher(sentText);
       
@@ -53,8 +65,9 @@ public class NamedEntityAnalysisAbner extends JCasAnnotator_ImplBase {
         ne.setBegin(countChar((String)sent.getSentence(), beginIndex));
         ne.setEnd(countChar((String)sent.getSentence(), endIndex) - 1);
         ne.setNamedEntity((String)sent.getSentence().substring(beginIndex, endIndex));
-        ne.setConfidence(0.5);
-        if(ne.getConfidence() >= 0.5)
+        ne.setCasProcessorId(AnalysisID);
+        String str = ne.getNamedEntity();
+        if(str.length() > 8 && str.split(" ").length < 3 && str.indexOf('(') == -1 && str.indexOf(')') == -1)
           ne.addToIndexes();
       }
     }

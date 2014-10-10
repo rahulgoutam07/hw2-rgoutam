@@ -18,19 +18,23 @@ import com.aliasi.chunk.Chunking;
 import com.aliasi.chunk.ConfidenceChunker;
 import com.aliasi.util.AbstractExternalizable;
 
-
+/**
+ * Analysis engine that uses lingpipe
+ * @author rgoutam
+ *
+ */
 public class NamedEntityAnalysisStatistical extends JCasAnnotator_ImplBase {
   ConfidenceChunker model;
-  
+  String AnalysisID = "lingpipe";
   /**
    * read the NER model file
    */
   @Override
   public void initialize(UimaContext aContext) throws ResourceInitializationException {
     // TODO Auto-generated method stub
+    
     try {
-      File f = new File(this.getClass().getClassLoader().getResource((String)aContext.getConfigParameterValue("ModelName")).getFile());
-      model = (ConfidenceChunker) AbstractExternalizable.readObject(f);
+      model = (ConfidenceChunker) AbstractExternalizable.readResourceObject(NamedEntityAnalysisStatistical.class,(String) aContext.getConfigParameterValue("ModelName"));
     } catch(Exception e) {
       throw new UIMARuntimeException(e);
     }
@@ -55,7 +59,9 @@ public class NamedEntityAnalysisStatistical extends JCasAnnotator_ImplBase {
       ne.setEnd(countChar((String)sent.getSentence(), c.end()) - 1);
       ne.setNamedEntity((String)sent.getSentence().substring(c.start(), c.end()));
       ne.setConfidence(Math.pow(2.0, c.score()));
-      if(ne.getConfidence() >= 0.5)
+      ne.setCasProcessorId(AnalysisID);
+      String str = ne.getNamedEntity();
+      if(ne.getConfidence() >= 0.5 && str.length() > 2 && str.indexOf('(') == -1 && str.indexOf(')') == -1)
         ne.addToIndexes();
     }
   }

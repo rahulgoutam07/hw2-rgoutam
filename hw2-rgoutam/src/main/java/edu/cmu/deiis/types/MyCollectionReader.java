@@ -13,7 +13,11 @@ import org.apache.uima.collection.CollectionReader_ImplBase;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.util.Progress;
 
-
+/**
+ * CollectionReader to read from input file
+ * @author rgoutam
+ *
+ */
 public class MyCollectionReader extends CollectionReader_ImplBase {
 
   BufferedReader br = null;

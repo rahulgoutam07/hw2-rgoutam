@@ -18,7 +18,11 @@ import org.apache.uima.collection.CollectionException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceProcessException;
 
-
+/**
+ * Cas Consumer
+ * @author rgoutam
+ *
+ */
 public class MyCASConsumer extends CasConsumer_ImplBase {
 
   BufferedWriter bout = null;

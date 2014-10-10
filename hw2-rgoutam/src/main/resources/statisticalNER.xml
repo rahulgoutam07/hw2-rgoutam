@@ -19,7 +19,7 @@
       <nameValuePair>
         <name>ModelName</name>
         <value>
-          <string>data/ne-en-bio-genetag.HmmChunker</string>
+          <string>/data/ne-en-bio-genetag.HmmChunker</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
